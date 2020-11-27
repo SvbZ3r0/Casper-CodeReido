@@ -114,11 +114,11 @@ into the {body} of the default.hbs template --}}
                 {{> subscribe-form}}
             {{/if}}
 
-            {{!--
             <section class="post-full-comments">
-                If you want to embed comments, this is a good place to do it!
+		<div id="commento"></div>
+		<script defer src="https://commento.codereido.com/js/commento.js" data-auto-init="false"></script>
+		<noscript>Please enable JavaScript to use the comments section.</noscript>
             </section>
-            --}}
 
         </article>
 
@@ -211,4 +211,76 @@ into the {body} of the default.hbs template --}}
         });
     });
 </script>
+<script>
+            
+// Detect if we have code tags on the page.
+var codeElement =  document.querySelector("pre > code");
+if (typeof(codeElement) != 'undefined' && codeElement != null)
+{
+  // Create CSS Element
+  var prismCSS = document.createElement('link');
+  prismCSS.rel = "stylesheet";
+  prismCSS.type = "text/css";
+  prismCSS.href = "/assets/prism/prism.css?v=1"
+
+  // Create PrismJS Element
+  var prismScript = document.createElement('script');
+  prismScript.type='text/javascript';
+  prismScript.src="/assets/prism/prism.js?v=1";
+
+  // Set Components Folder because of asynch script loading
+  prismScript.onload = function() {
+    Prism.plugins.autoloader.languages_path = '/assets/prism/components/';
+  };
+
+  // Load script and css in the DOM
+  document.head.appendChild(prismCSS);
+  document.head.appendChild(prismScript);
+}
+</script>
+<script>
+/**
+ * Lazy-Loader for the comments section
+ */
+const observer = new IntersectionObserver(commentsSectionIntersecting);
+
+/**
+ * Called when the element comes into view
+ */
+function commentsSectionIntersecting(entries) {
+  entries
+    .filter(e => e.isIntersecting)
+    .forEach(e => {
+      window.commento.main();
+      observer.unobserve(e.target);
+    });
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+  // we only need to observe anything, if there is a commento element on the page
+  const commentsElem = document.getElementById("commento");
+  if (commentsElem) {
+    if (typeof window.commento.main !== "undefined") {
+      observer.observe(commentsElem);
+    } else {
+      // if commento is not available, we remove the comments section
+      commentsElem.parentNode.removeChild(commentsElem);
+    }
+  }
+});
+</script>
+<!-- Open post links in new tab -->
+<script type='text/javascript'>
+  $( document ).ready(function() {
+      $(".post-content a").attr("target","moredetail");
+  });
+</script>
+
+<!-- Font size in the code blocks -->
+<style>
+  pre[class*="language-"] {
+      font-size: 0.67em;
+  }
+</style>
 {{/contentFor}}
+

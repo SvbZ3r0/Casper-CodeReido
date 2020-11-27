@@ -2263,9 +2263,9 @@ Usage (In Ghost editor):
     flex-wrap: wrap;
     align-items: center;
     margin-top: 14px;
-    color: var(--darkgrey);
+    color: color-mod(var(--midgrey) l(-10%));
     font-size: 1.5rem;
-    font-weight: 500;
+    font-weight: 400;
 }
 
 .post-full-content .kg-bookmark-icon {
@@ -2289,8 +2289,6 @@ Usage (In Ghost editor):
     line-height: 1.5em;
     text-overflow: ellipsis;
     white-space: nowrap;
-    color: color-mod(var(--midgrey) l(-10%));
-    font-weight: 400;
 }
 
 @media (max-width: 800px) {
